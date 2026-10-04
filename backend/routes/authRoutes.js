@@ -1,9 +1,19 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const User = require("../models/User");
 const authMiddleware = require("../middleware/authMiddleware");
 const adminMiddleware = require("../middleware/adminMiddleware");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_APP_PASSWORD,
+  },
+});
 
 const router = express.Router();
 
@@ -207,6 +217,154 @@ router.put("/change-password", authMiddleware, async (req, res) => {
     });
   } catch (error) {
     console.error("Change password error:", error);
+
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+});
+// FORGOT PASSWORD
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Please enter your email address",
+      });
+    }
+
+    const user = await User.findOne({
+      email: email.toLowerCase().trim(),
+    });
+
+    // Do not reveal whether an email exists
+    if (!user) {
+      return res.json({
+        message:
+          "If an account exists with this email, a password reset link will be sent.",
+      });
+    }
+
+    // Generate secure random token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    // Store token and expiry time
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = new Date(
+      Date.now() + 15 * 60 * 1000
+    );
+
+    await user.save();
+
+    // Create reset link
+    const resetLink = `https://uni-go-seven.vercel.app/reset-password?token=${resetToken}`;
+
+    // Send reset email
+    await transporter.sendMail({
+      from: `"UniGo" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: "UniGo - Password Reset",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
+          <h2 style="color: #4f46e5;">UniGo - Password Reset</h2>
+
+          <p>Hello ${user.name},</p>
+
+          <p>
+            We received a request to reset your UniGo account password.
+          </p>
+
+          <p>
+            Click the button below to create a new password:
+          </p>
+
+          <p>
+            <a
+              href="${resetLink}"
+              style="
+                display: inline-block;
+                padding: 12px 20px;
+                background-color: #4f46e5;
+                color: white;
+                text-decoration: none;
+                border-radius: 6px;
+              "
+            >
+              Reset Password
+            </a>
+          </p>
+
+          <p>
+            This link will expire in <strong>15 minutes</strong>.
+          </p>
+
+          <p>
+            If you did not request a password reset, you can safely ignore this email.
+          </p>
+
+          <p>
+            Regards,<br />
+            UniGo Team
+          </p>
+        </div>
+      `,
+    });
+
+    res.json({
+      message:
+        "If an account exists with this email, a password reset link has been sent.",
+    });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+
+    res.status(500).json({
+      message: "Unable to send password reset email",
+    });
+  }
+});
+
+// RESET PASSWORD
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        message: "Reset token and new password are required",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        message: "New password must be at least 6 characters",
+      });
+    }
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid or expired reset link",
+      });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+
+    // Remove the token after successful reset
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+
+    await user.save();
+
+    res.json({
+      message: "Password reset successfully. You can now login.",
+    });
+  } catch (error) {
+    console.error("Reset password error:", error);
 
     res.status(500).json({
       message: "Server error",

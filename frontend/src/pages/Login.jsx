@@ -100,6 +100,10 @@ function Login() {
             {loading ? "Logging in..." : "Login"}
           </button>
 
+          <p className="forgot-password">
+            <Link to="/forgot-password">Forgot Password?</Link>
+        </p>
+
         </form>
 
         <p className="switch-auth">

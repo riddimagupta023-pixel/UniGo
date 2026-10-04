@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 import "../App.css";
-import API from "../services/api";
 
 function StudentDashboard() {
   const navigate = useNavigate();
@@ -220,87 +219,6 @@ function StudentDashboard() {
                 <p>Share ideas and connect with fellow students.</p>
               </div>
             </div>
-
-          </div>
-
-        </section>
-
-        {/* Change Password */}
-        <section className="dashboard-section">
-
-          <p className="section-label">ACCOUNT SECURITY</p>
-
-          <div className="password-card">
-
-            <div className="password-header">
-              <div>
-                <h2>🔐 Change Password</h2>
-                <p>
-                  Keep your UniGo account secure by updating your password.
-                </p>
-              </div>
-            </div>
-
-            <form onSubmit={handleChangePassword} className="password-form">
-
-              <div className="password-field">
-                <label>Current Password</label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Enter current password"
-                  required
-                />
-              </div>
-
-              <div className="password-field">
-                <label>New Password</label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter new password"
-                  minLength="6"
-                  required
-                />
-              </div>
-
-              <div className="password-field">
-                <label>Confirm New Password</label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm new password"
-                  minLength="6"
-                  required
-                />
-              </div>
-
-              {passwordError && (
-                <p className="password-error">
-                  ❌ {passwordError}
-                </p>
-              )}
-
-              {passwordMessage && (
-                <p className="password-success">
-                  ✅ {passwordMessage}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                className="password-btn"
-                disabled={changingPassword}
-              >
-                {changingPassword
-                  ? "Changing Password..."
-                  : "Change Password"}
-              </button>
-
-            </form>
 
           </div>
 

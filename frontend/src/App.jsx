@@ -15,6 +15,8 @@ import Events from "./pages/Events";
 import LostFound from "./pages/LostFound";
 import Complaints from "./pages/Complaints";
 import Community from "./pages/Community";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -29,6 +31,10 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<Register />} />
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Student protected pages */}
 

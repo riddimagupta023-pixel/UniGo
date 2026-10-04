@@ -1,7 +1,10 @@
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const dotenv = require("dotenv");
 
 const authRoutes = require("./routes/authRoutes");
 const announcementRoutes = require("./routes/announcementRoutes");
@@ -10,8 +13,6 @@ const lostFoundRoutes = require("./routes/lostFoundRoutes");
 const complaintRoutes = require("./routes/complaintRoutes");
 const communityRoutes = require("./routes/communityRoutes");
 const commentRoutes = require("./routes/commentRoutes");
-
-dotenv.config();
 
 const app = express();
 

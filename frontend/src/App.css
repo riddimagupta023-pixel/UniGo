@@ -1960,3 +1960,17 @@ footer p {
     width: 100%;
   }
 }
+.forgot-password {
+  text-align: center;
+  margin: 14px 0 0;
+}
+
+.forgot-password a {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
