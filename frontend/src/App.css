@@ -1861,3 +1861,102 @@ footer p {
     gap: 6px;
   }
 }
+/* Change Password */
+.password-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  margin-top: 18px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+.password-header h2 {
+  margin: 0 0 8px;
+}
+
+.password-header p {
+  margin: 0 0 24px;
+  color: #6b7280;
+}
+
+.password-form {
+  display: grid;
+  gap: 16px;
+  max-width: 600px;
+}
+
+.password-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.password-field label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.password-field input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.password-field input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.password-btn {
+  width: fit-content;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.password-btn:hover {
+  opacity: 0.9;
+}
+
+.password-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.password-success {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 14px;
+}
+
+.password-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .password-card {
+    padding: 20px;
+  }
+
+  .password-btn {
+    width: 100%;
+  }
+}
