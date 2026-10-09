@@ -21,7 +21,7 @@ function Complaints() {
 
   const fetchComplaints = async () => {
     try {
-      const response = await API.get("/complaints/my");
+      const response = await API.get("/complaints");
       setComplaints(response.data);
     } catch (error) {
       setError(

@@ -16,8 +16,8 @@ const router = express.Router();
 // Student: view own complaints
 router.get("/my", authMiddleware, getMyComplaints);
 
-// Admin: view all complaints
-router.get("/", authMiddleware, adminMiddleware, getComplaints);
+// Admin/Student: view all complaints
+router.get("/", authMiddleware, getComplaints);
 
 // Student: submit complaint
 router.post("/", authMiddleware, createComplaint);

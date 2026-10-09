@@ -2,18 +2,12 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const User = require("../models/User");
 const authMiddleware = require("../middleware/authMiddleware");
 const adminMiddleware = require("../middleware/adminMiddleware");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_APP_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const router = express.Router();
 
@@ -261,55 +255,55 @@ router.post("/forgot-password", async (req, res) => {
     const resetLink = `https://uni-go-seven.vercel.app/reset-password?token=${resetToken}`;
 
     // Send reset email
-    await transporter.sendMail({
-      from: `"UniGo" <${process.env.EMAIL_USER}>`,
-      to: user.email,
-      subject: "UniGo - Password Reset",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
-          <h2 style="color: #4f46e5;">UniGo - Password Reset</h2>
+    await resend.emails.send({
+  from: "UniGo <onboarding@resend.dev>",
+  to: user.email,
+  subject: "UniGo - Password Reset",
+  html: `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
+      <h2 style="color: #4f46e5;">UniGo - Password Reset</h2>
 
-          <p>Hello ${user.name},</p>
+      <p>Hello ${user.name},</p>
 
-          <p>
-            We received a request to reset your UniGo account password.
-          </p>
+      <p>
+        We received a request to reset your UniGo account password.
+      </p>
 
-          <p>
-            Click the button below to create a new password:
-          </p>
+      <p>
+        Click the button below to create a new password:
+      </p>
 
-          <p>
-            <a
-              href="${resetLink}"
-              style="
-                display: inline-block;
-                padding: 12px 20px;
-                background-color: #4f46e5;
-                color: white;
-                text-decoration: none;
-                border-radius: 6px;
-              "
-            >
-              Reset Password
-            </a>
-          </p>
+      <p>
+        <a
+          href="${resetLink}"
+          style="
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #4f46e5;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+          "
+        >
+          Reset Password
+        </a>
+      </p>
 
-          <p>
-            This link will expire in <strong>15 minutes</strong>.
-          </p>
+      <p>
+        This link will expire in <strong>15 minutes</strong>.
+      </p>
 
-          <p>
-            If you did not request a password reset, you can safely ignore this email.
-          </p>
+      <p>
+        If you did not request a password reset, you can safely ignore this email.
+      </p>
 
-          <p>
-            Regards,<br />
-            UniGo Team
-          </p>
-        </div>
-      `,
-    });
+      <p>
+        Regards,<br />
+        UniGo Team
+      </p>
+    </div>
+  `,
+});
 
     res.json({
       message:

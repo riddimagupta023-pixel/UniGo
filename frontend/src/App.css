@@ -1974,3 +1974,27 @@ footer p {
 .forgot-password a:hover {
   text-decoration: underline;
 }
+/* Admin navbar layout */
+.admin-dashboard .navbar {
+  width: 100%;
+}
+
+.admin-dashboard .navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  box-sizing: border-box;
+}
+
+.admin-dashboard .navbar-container .logo {
+  margin: 0;
+}
+
+.admin-dashboard .navbar-container .logout-btn {
+  margin: 0;
+  flex-shrink: 0;
+}

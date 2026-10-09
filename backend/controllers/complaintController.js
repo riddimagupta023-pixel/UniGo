@@ -1,11 +1,11 @@
 const Complaint = require("../models/Complaint");
 
-// GET ALL COMPLAINTS
+// GET ALL COMPLAINTS - visible to all logged-in users
 const getComplaints = async (req, res) => {
   try {
     const complaints = await Complaint.find()
-      .populate("submittedBy", "name email course")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .select("title description category status createdAt");
 
     res.json(complaints);
   } catch (error) {
